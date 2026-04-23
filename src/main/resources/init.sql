@@ -48,6 +48,12 @@ CREATE TABLE GroupResourcePermissions (
 
 
 -- TODO query "all permissions for a user" using UNION on both UserResourcePermissions and GroupResourcePermissions
+SELECT P.name FROM UserResourcePermissions UP JOIN Permissions P ON UP.permId = P.permId WHERE UP.userId = 0;
+
+--....
+UNION
+SELECT FROM GroupResourcePermissions;
+
 -- TODO view for ^ (Effective permissions per user)
 -- TODO view for "user access summary" (which users can access which resources?) use case: dashboard
 -- TODO view for permissions from a users view (can only see own perms)
