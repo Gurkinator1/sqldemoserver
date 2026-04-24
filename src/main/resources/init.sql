@@ -124,16 +124,24 @@ INSERT INTO Resources VALUES (0, 'door_p143', '');
 -- give user 0 access to door_p143
 INSERT INTO UserResourcePermissions VALUES (0, 0, 0);
 
+-- example auth method
+INSERT INTO AuthMethods VALUES (0, 0, 'NFC', '673f2f5c942d4e423b43eb3fae57e29b', '2026-4-1', '2080-1-1');
+
+-- EXAMPLES
+
 -- get direct permissions of user 0 
 SELECT P.name FROM UserResourcePermissions UP JOIN Permissions P ON UP.permId = P.permId WHERE UP.userId = 0;
 
 -- get permissions of group 0
 SELECT P.name FROM GroupResourcePermissions GP JOIN Permissions P ON GP.permId = P.permId WHERE GP.groupId = 0;
 
--- TODO view for ^ (Effective permissions per user)
--- TODO view for "user access summary" (which users can access which resources?) use case: dashboard
--- TODO view for permissions from a users view (can only see own perms)
--- TODO trigger for checking new grants (ex. user cant have direct AND group permission)
+-- get perms using auth
+SELECT P.name FROM UserResourcePermissions UP JOIN Permissions P 
+ON UP.permId = P.PermId 
+WHERE UP.userId in (
+	SELECT userId FROM AuthMethods 
+	WHERE type='NFC' AND super_secret_hash='673f2f5c942d4e423b43eb3fae57e29b'
+);
 
 --Trigger--
 CREATE TRIGGER trg_user_login
