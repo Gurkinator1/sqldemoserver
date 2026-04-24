@@ -65,7 +65,6 @@ CREATE TABLE Logs (
     logAction VARCHAR,
     userId INT,
     FOREIGN KEY (userId) REFERENCES Users(userId),
-    FOREIGN KEY (resourceId) REFERENCES Resources(resourceId)
 );
 
 -- WIP "Authentication"
