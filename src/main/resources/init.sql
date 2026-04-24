@@ -137,9 +137,7 @@ CREATE TRIGGER trg_user_login
 AFTER UPDATE ON Users
 FOR EACH ROW
 WHEN 
-    OLD.lastLogin <> NEW.lastLogin
-    OR (OLD.lastLogin IS NULL AND NEW.lastLogin IS NOT NULL)
-    OR (OLD.lastLogin IS NOT NULL AND NEW.lastLogin IS NULL)
+    OLD.lastLogin < NEW.lastLogin
 BEGIN
     INSERT INTO Logs (time, action, resourceId, userId)
     VALUES (
