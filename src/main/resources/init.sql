@@ -6,7 +6,11 @@ CREATE TABLE Resources (
 );
 
 CREATE TABLE Users (
-    userId INT PRIMARY KEY
+    userId INT PRIMARY KEY,
+    username VARCHAR NOT NULL UNIQUE, --DO we want taht to be Unique
+    vorname VARCHAR,
+    nachname VARCHAR,
+    lastLogin DATE,
 );
 
 CREATE TABLE Groups (
@@ -45,6 +49,15 @@ CREATE TABLE GroupResourcePermissions (
     PRIMARY KEY (groupId, resourceId, permId)
     -- TODO constraints
 );
+--Trigger adds new logs when a user login is Detected.
+CREATE TABLE Logs (
+    time DATE,
+    action VARCHAR,
+    resourceId INT, 
+    userId INT,
+    FOREIGN KEY (userId) REFERENCES Users(userId),
+    FOREIGN KEY (resourceId) REFERENCES Resources(resourceId),
+);
 
 
 -- TODO query "all permissions for a user" using UNION on both UserResourcePermissions and GroupResourcePermissions
@@ -52,7 +65,7 @@ SELECT P.name FROM UserResourcePermissions UP JOIN Permissions P ON UP.permId = 
 
 --....
 UNION
-SELECT FROM GroupResourcePermissions;
+SELECT P.name FROM GroupResourcePermissions GP JOIN Permissions P ON GP.permId = P.permId WHERE GP.groupId = 0;
 
 -- TODO view for ^ (Effective permissions per user)
 -- TODO view for "user access summary" (which users can access which resources?) use case: dashboard
