@@ -7,6 +7,8 @@ DROP TABLE IF EXISTS UserResourcePermissions;
 DROP TABLE IF EXISTS GroupResourcePermissions;
 DROP TABLE IF EXISTS AuthMethods;
 DROP TABLE IF EXISTS Logs;
+DROP VIEW IF EXISTS EffectiveUserPermissions;
+DROP VIEW IF EXISTS UserWithGroups;
 
 -- create core tables
 CREATE TABLE Resources (
