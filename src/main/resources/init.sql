@@ -149,3 +149,47 @@ END;
 
 UPDATE Users SET lastlogin='2026-4-24' WHERE userId=0;
 SELECT * FROM Logs;
+
+
+--Views--
+CREATE VIEW EffectiveUserPermissions AS
+SELECT 
+    u.userId,
+    r.resourceId,
+    p.permId,
+    p.name AS permission
+FROM Users u
+JOIN UserResourcePermissions urp 
+    ON u.userId = urp.userId
+JOIN Permissions p 
+    ON urp.permId = p.permId
+JOIN Resources r 
+    ON urp.resourceId = r.resourceId
+
+UNION
+
+SELECT 
+    u.userId,
+    r.resourceId,
+    p.permId,
+    p.name AS permission
+FROM Users u
+JOIN UserGroups ug 
+    ON u.userId = ug.userId
+JOIN GroupResourcePermissions grp 
+    ON ug.groupId = grp.groupId
+JOIN Permissions p 
+    ON grp.permId = p.permId
+JOIN Resources r 
+    ON grp.resourceId = r.resourceId;
+
+
+CREATE VIEW UserWithGroups AS
+SELECT 
+    u.userId,
+    u.username,
+    g.groupId,
+    g.name AS groupName
+FROM Users u
+JOIN UserGroups ug ON u.userId = ug.userId
+JOIN Groups g ON ug.groupId = g.groupId;
