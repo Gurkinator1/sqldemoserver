@@ -10,7 +10,7 @@ CREATE TABLE Users (
     username VARCHAR NOT NULL UNIQUE, --DO we want taht to be Unique
     vorname VARCHAR,
     nachname VARCHAR,
-    lastLogin DATE,
+    lastLogin TIMESTAMP
 );
 
 CREATE TABLE Groups (
@@ -51,12 +51,12 @@ CREATE TABLE GroupResourcePermissions (
 );
 --Trigger adds new logs when a user login is Detected.
 CREATE TABLE Logs (
-    time DATE,
+    time TIMESTAMP,
     action VARCHAR,
     resourceId INT, 
     userId INT,
     FOREIGN KEY (userId) REFERENCES Users(userId),
-    FOREIGN KEY (resourceId) REFERENCES Resources(resourceId),
+    FOREIGN KEY (resourceId) REFERENCES Resources(resourceId)
 );
 
 
@@ -82,7 +82,26 @@ CREATE TABLE AuthMethods (
     type VARCHAR, -- "password", "api_token"
     super_secret_hash VARCHAR,
     creation DATE,
-    expires DATE,
+    expires DATE
 );
 
 -- TODO java API for authentication
+
+
+--Trigger--
+CREATE TRIGGER trg_user_login
+AFTER UPDATE ON Users
+FOR EACH ROW
+WHEN 
+    OLD.lastLogin <> NEW.lastLogin
+    OR (OLD.lastLogin IS NULL AND NEW.lastLogin IS NOT NULL)
+    OR (OLD.lastLogin IS NOT NULL AND NEW.lastLogin IS NULL)
+BEGIN
+    INSERT INTO Logs (time, action, resourceId, userId)
+    VALUES (
+        CURRENT_TIMESTAMP,
+        'USER_LOGIN',
+        NULL,
+        NEW.userId
+    );
+END;
