@@ -6,6 +6,7 @@ DROP TABLE IF EXISTS UserGroups;
 DROP TABLE IF EXISTS UserResourcePermissions;
 DROP TABLE IF EXISTS GroupResourcePermissions;
 DROP TABLE IF EXISTS AuthMethods;
+DROP TABLE IF EXISTS Logs;
 
 -- create core tables
 CREATE TABLE Resources (
@@ -61,8 +62,7 @@ CREATE TABLE GroupResourcePermissions (
 --Trigger adds new logs when a user login is Detected.
 CREATE TABLE Logs (
     time TIMESTAMP,
-    action VARCHAR,
-    resourceId INT, 
+    logAction VARCHAR,
     userId INT,
     FOREIGN KEY (userId) REFERENCES Users(userId),
     FOREIGN KEY (resourceId) REFERENCES Resources(resourceId)
@@ -139,11 +139,13 @@ FOR EACH ROW
 WHEN 
     OLD.lastLogin < NEW.lastLogin
 BEGIN
-    INSERT INTO Logs (time, action, resourceId, userId)
+    INSERT INTO Logs (time, logAction, userId)
     VALUES (
         CURRENT_TIMESTAMP,
         'USER_LOGIN',
-        NULL,
         NEW.userId
     );
 END;
+
+UPDATE Users SET lastlogin='2026-4-24' WHERE userId=0;
+SELECT * FROM Logs;
