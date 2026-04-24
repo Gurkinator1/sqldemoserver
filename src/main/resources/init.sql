@@ -75,7 +75,7 @@ CREATE TABLE AuthMethods (
     type VARCHAR, -- "password", "api_token"
     super_secret_hash VARCHAR,
     creation DATE,
-    expires DATE,
+    expires DATE
 );
 
 -- sample data 
