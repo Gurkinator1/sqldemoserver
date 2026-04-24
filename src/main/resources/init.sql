@@ -135,6 +135,10 @@ SELECT P.name FROM UserResourcePermissions UP JOIN Permissions P ON UP.permId = 
 -- get permissions of group 0
 SELECT P.name FROM GroupResourcePermissions GP JOIN Permissions P ON GP.permId = P.permId WHERE GP.groupId = 0;
 
+SELECT * FROM UserPermissionsSummary WHERE userId = 0;
+
+SELECT * FROM UserPermissionsSummary WHERE userId = 0;
+
 -- get perms using auth
 SELECT P.name FROM UserResourcePermissions UP JOIN Permissions P 
 ON UP.permId = P.PermId 
@@ -204,3 +208,16 @@ SELECT
 FROM Users u
 JOIN UserGroups ug ON u.userId = ug.userId
 JOIN Groups g ON ug.groupId = g.groupId;
+
+CREATE VIEW UserPermissionsSummary AS
+SELECT 
+    u.userId,
+    u.username,
+    r.resourceId,
+    r.name AS resourceName,
+    p.name AS permission
+FROM Users u
+JOIN EffectiveUserPermissions eup ON u.userId = eup.userId
+JOIN Resources r ON eup.resourceId = r.resourceId
+JOIN Permissions p ON eup.permId = p.permId; 
+
