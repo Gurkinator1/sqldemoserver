@@ -64,7 +64,7 @@ CREATE TABLE Logs (
     time TIMESTAMP,
     logAction VARCHAR,
     userId INT,
-    FOREIGN KEY (userId) REFERENCES Users(userId),
+    FOREIGN KEY (userId) REFERENCES Users(userId)
 );
 
 -- WIP "Authentication"
@@ -110,6 +110,8 @@ INSERT INTO Users (userId, username, vorname, nachname, lastLogin) VALUES
 (28, 'ahuber', 'Anton', 'Huber', '2026-03-28'),
 (29, 'mvoigt', 'Mila', 'Voigt', '2026-03-29'),
 (30, 'jbrandt', 'Jan', 'Brandt', '2026-03-30');
+
+INSERT INTO Groups VALUES (0, 'admin', '2026-04-01');
 
 -- example permission, accessing a door?
 INSERT INTO Permissions VALUES (0, 'doorAccess');
